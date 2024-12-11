@@ -26,6 +26,7 @@ export default function AppManagerMain({navigation}) {
     'https://winspirit.app/?identifier=',
     'https://rocketplay.com/api/payments',
     'https://ninewin.com/',
+    'https://checkout.payop.com/en/payment/status/processing/',
   ];
 
   const browserOpenDomens = [
@@ -69,6 +70,7 @@ export default function AppManagerMain({navigation}) {
   };
 
   const [currentURL, setCurrentURL] = useState('');
+  const checkURL = useRef('');
 
   function checkLockedURL(url) {
     setCurrentURL(url);
@@ -104,7 +106,12 @@ export default function AppManagerMain({navigation}) {
 
   const stateChange = navState => {
     const currentUrl = navState.url;
+    checkURL.current = currentUrl;
     checkLockedURL(currentUrl);
+  };
+
+  const isBackClick = () => {
+    webViewRef.current.goBack();
   };
 
   const [isInit, setInit] = React.useState(false);
@@ -153,7 +160,7 @@ export default function AppManagerMain({navigation}) {
         userAgent={'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Safari/604.1 Version/18.1'}
       />
     </SafeAreaView>
-    <TouchableOpacity style={{width: 30, height: 30,  position: 'absolute', bottom: 5, left: 25, alignItems: 'center', justifyContent: 'center'}} onPress={() => {webViewRef.current.goBack()}}>
+    <TouchableOpacity style={{width: 30, height: 30,  position: 'absolute', bottom: 5, left: 25, alignItems: 'center', justifyContent: 'center'}} onPress={isBackClick}>
       <Image source={require('./assets/_back.png')} style={{width: '90%', height: '90%', resizeMode: 'contain'}}/>
     </TouchableOpacity>
 
