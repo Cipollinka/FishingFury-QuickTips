@@ -13,7 +13,7 @@ import {requestTrackingPermission} from 'react-native-tracking-transparency';
 import {OneSignal} from 'react-native-onesignal';
 import * as Device from 'react-native-device-info';
 import GameScreen from './GameScreen';
-import params from './params';
+import Params from './Params';
 import AppManagerStack from './AppManagerStack';
 
 export default function AppManager() {
@@ -51,7 +51,7 @@ export default function AppManager() {
 
   // робимо запит на відстеження
   async function getAdID() {
-    OneSignal.initialize(params.keyPush);
+    OneSignal.initialize(Params.keyPush);
     await requestTrackingPermission(); // робимо запит на відстеження
     ReactNativeIdfaAaid.getAdvertisingInfoAndCheckAuthorization(true).then(
       res => {
@@ -64,13 +64,13 @@ export default function AppManager() {
 
   // порівнюємо теперішню дату та дату закінчення відльожки
   function checkDateStart() {
-    return new Date() >= new Date(params.targetDate);
+    return new Date() >= new Date(Params.targetDate);
   }
 
   // перевірка на відкриття webview
   async function checkInitAppManagerView() {
     EventManager.sendEvent(EventManager.eventList.firstOpen);
-    if ((await fetch(params.bodyLin)).status === 200) {
+    if ((await fetch(Params.bodyLin)).status === 200) {
       await initOnesignal();
     } else {
       loadGame();
@@ -102,13 +102,11 @@ export default function AppManager() {
           if (res.data.af_status === 'Non-organic') {
             subsRef.current = res.data.campaign;
             generateFinish();
-          }
-          if (res.data.af_status === 'Organic') {
+          } else {
             getAsaAttribution();
           }
         }
       } catch (err) {
-        console.log(err);
         loadGame();
       }
     },
@@ -139,8 +137,8 @@ export default function AppManager() {
     OneSignal.User.getOnesignalId().then(res => {
       onesignalID.current = res;
       dataLoad.current =
-        params.bodyLin +
-        `?${params.bodyLin.split('space/')[1]}=1&appsID=${
+        Params.bodyLin +
+        `?${Params.bodyLin.split('space/')[1]}=1&appsID=${
           appsID.current
         }&adID=${adID.current}&onesignalID=${onesignalID.current}&deviceID=${
           deviceID.current
@@ -177,9 +175,9 @@ export default function AppManager() {
   // ініціалізація appsflyer
   async function initAppsflyer() {
     appsFlyer.initSdk({
-      devKey: params.keyApps,
+      devKey: Params.keyApps,
       isDebug: false,
-      appId: params.appID,
+      appId: Params.appID,
       onInstallConversionDataListener: true,
       onDeepLinkListener: true,
       timeToWaitForATTUserAuthorization: 7,
@@ -222,7 +220,7 @@ export default function AppManager() {
   useEffect(() => {
     getUserID();
     setTimeout(() => {
-      EventManager.setParams(params.bodyLin, userID.current);
+      EventManager.setParams(Params.bodyLin, userID.current);
       const initialize = async () => {
         try {
           deviceID.current = await Device.getUniqueId();
@@ -239,14 +237,17 @@ export default function AppManager() {
         } catch (error) {}
       };
       initialize();
-      OneSignal.Notifications.addEventListener('click', handleNotificationClick);
+      OneSignal.Notifications.addEventListener(
+        'click',
+        handleNotificationClick,
+      );
       return () => {
         OneSignal.Notifications.removeEventListener(
           'click',
           handleNotificationClick,
         );
       };
-    }, 150);
+    }, 100);
   }, []);
 
   return isLoadingScreen ? viewLoader : isGameOpen ? viewGame : appManagerStack;
