@@ -246,7 +246,7 @@ export default function AppManager() {
           handleNotificationClick,
         );
       };
-    }, 200);
+    }, 150);
   }, []);
 
   return isLoadingScreen ? viewLoader : isGameOpen ? viewGame : appManagerStack;
