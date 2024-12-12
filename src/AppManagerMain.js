@@ -198,7 +198,7 @@ export default function AppManagerMain({navigation}) {
           }}
           onPress={isBackClick}>
           <Image
-            source={require('./assets/images/_back.png')}
+            source={require('./assets/_back.png')}
             style={{width: '90%', height: '90%', resizeMode: 'contain'}}
           />
         </TouchableOpacity>
@@ -219,7 +219,7 @@ export default function AppManagerMain({navigation}) {
             setLoadingPage(true);
           }}>
           <Image
-            source={require('./assets/images/_reload.png')}
+            source={require('./assets/_refresh.png')}
             style={{width: '90%', height: '90%', resizeMode: 'contain'}}
           />
         </TouchableOpacity>
