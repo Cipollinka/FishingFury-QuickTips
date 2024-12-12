@@ -109,8 +109,14 @@ export default function AppManagerMain({navigation}) {
     checkLockedURL(currentUrl);
   };
 
+  const [isDoubleClick, setDoubleClick] = useState(false);
+
+
   const isBackClick = () => {
+    if (isDoubleClick) webViewRef.current.injectJavaScript(`window.location.replace('${linkRefresh}')`);
+    else setDoubleClick(true);
     webViewRef.current.goBack();
+    setTimeout(() => setDoubleClick(false), 500);
   };
 
   const [isInit, setInit] = React.useState(false);
