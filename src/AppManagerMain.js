@@ -26,7 +26,7 @@ export default function AppManagerMain({navigation}) {
     'https://winspirit.app/?identifier=',
     'https://rocketplay.com/api/payments',
     'https://ninewin.com/',
-    'https://checkout.payop.com/en/payment/status/processing/',
+    'https://checkout.payop.com/en/payment/invoice-preprocessing/',
   ];
 
   const browserOpenDomens = [
